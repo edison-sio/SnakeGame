@@ -1,2 +1,2 @@
 # SnakeGame
-Create a personal interesting snake game
+Create a personal interesting snake game using c++.
