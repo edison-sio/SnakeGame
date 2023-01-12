@@ -20,8 +20,8 @@ class Position {
         }
 
         Position nextPosition(Direction dir) {
-            newRow = row + dir.rowOffset;
-            newCol = col + dir.colOffset;
+            int newRow = row + dir.rowOffset;
+            int newCol = col + dir.colOffset;
             return Position(newRow, newCol);
         }
 };
@@ -30,17 +30,27 @@ class Direction {
     public:
         int rowOffset;
         int colOffset;
-        static const Direction Left = Direction(-1, 0);
-        static const Direction Right = Direction(1, 0);
-        static const Direction Top = Direction(0, -1);
-        static const Direction Down = Direction(0, 1);
-        static const Direction None = Direction(0, 0);
 
         Direction(int row, int col) {
             rowOffset = row;
             colOffset = col;
         }
 
+        Direction operator+(const Direction& d) {
+            int newRowOffset = rowOffset + d.rowOffset;
+            int newColOffset = colOffset + d.colOffset;
+            return Direction(newRowOffset, newColOffset);
+        }
+
+        Direction operator+(const Direction& d) {
+            int newRowOffset = rowOffset - d.rowOffset;
+            int newColOffset = colOffset - d.colOffset;
+            return Direction(newRowOffset, newColOffset);
+        }
+
+        bool operator==(const Direction& d) {
+            return rowOffset == d.rowOffset && colOffset == d.colOffset;
+        }
 };
 
 enum GridValue { EMPTY, SNAKE, FOOD, OUTSIDE };
@@ -53,7 +63,7 @@ class GameState {
     int snakeLength = 3;
     std::vector<Position> grid;
     std::vector<Position> snake;
-    Direction dir = Direction.Left;
+    Direction dir = Direction(1, 0);
     Position food = Position(-1, -1);
     bool gameOver = false;
     int score = 0;
@@ -89,7 +99,7 @@ class GameState {
     }
 
     void changeDirection(Direction d) {
-        if (dir + dir == Direction.None) {
+        if (dir + d == Direction(0, 0)) {
             return;
         }
         dir = d;
@@ -103,22 +113,22 @@ class GameState {
             }
         }
         int foodIndex = rand() % emptyPositions.size();
-        return food.at(foodIndex);
+        food = emptyPositions.at(foodIndex);
     }
 
     void updateState() {
         Position currHead = snake.front();
         Position newPosition = currHead.nextPosition(dir);
         // Check if newPosition in grid
-        if (newPosition.row < 0 || newPostion.row >= rows || newPosition.col < 0 || newPosition.col >= cols) {
+        if (newPosition.row < 0 || newPosition.row >= rows || newPosition.col < 0 || newPosition.col >= cols) {
             gameOver = true;
             return;
         }
-        auto find_it = std::find(snake.begin(), snake.end());
-        if (find_it != snake.end() && *find_it != snake.back()) {
-            gameOver = true;
-            return;
-        }
+        // auto find_it = std::find(snake.begin(), snake.end());
+        // if (find_it != snake.end() && *find_it != snake.back()) {
+        //     gameOver = true;
+        //     return;
+        // }
 
         snake.pop_back();
         snake.insert(snake.begin(), newPosition);
