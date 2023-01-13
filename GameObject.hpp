@@ -1,31 +1,9 @@
 #include <vector>
 #include <cstdlib>
 #include <algorithm>
-#include "GameObject.hpp"
+// #include "GameObject.hpp"
 
 #define SNAKE_DEFAULT_LEN 3
-
-class Position {
-    public:
-        int row_;
-        int col_;
-    
-        Position(int row, int col) : row_(row), col_(col) { }
-
-        void update(int row, int col) {
-            row_ = row;
-            col_ = col;
-        }
-
-        int row() const { return row_; }
-        int col() const { return col_; }
-
-        Position nextPosition(Direction dir) {
-            int newRow = row_ + dir.rowOffset();
-            int newCol = col_ + dir.colOffset();
-            return Position(newRow, newCol);
-        }
-};
 
 class Direction {
 public:
@@ -53,6 +31,29 @@ public:
         return rowOffset_ == dir.rowOffset() && colOffset_ == dir.colOffset();
     }
 };
+
+class Position {
+    public:
+        int row_;
+        int col_;
+    
+        Position(int row, int col) : row_(row), col_(col) { }
+
+        void update(int row, int col) {
+            row_ = row;
+            col_ = col;
+        }
+
+        int row() const { return row_; }
+        int col() const { return col_; }
+
+        Position nextPosition(Direction dir) {
+            int newRow = row_ + dir.rowOffset();
+            int newCol = col_ + dir.colOffset();
+            return Position(newRow, newCol);
+        }
+};
+
 
 enum GridValue { EMPTY=0, SNAKE, FOOD, OUTSIDE };
 enum Theme { DARK, BUGCAT_CAPOO };
